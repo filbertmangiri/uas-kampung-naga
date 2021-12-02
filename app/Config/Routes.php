@@ -45,6 +45,7 @@ $routes->post('login', 'Account\Login::submit', ['filter' => 'logged-out']);
 $routes->get('logout', 'Account\Logout', ['filter' => 'logged-in']);
 
 $routes->get('dashboard', 'Dashboard', ['filter' => 'logged-in:login']);
+$routes->post('dashboard/getaccounts', 'Dashboard::getAccounts', ['filter' => 'management']);
 
 $routes->get('u', 'Account\User', ['filter' => 'logged-in:login']);
 $routes->get('u/settings', 'Account\User::settings', ['filter' => 'logged-in:login']);

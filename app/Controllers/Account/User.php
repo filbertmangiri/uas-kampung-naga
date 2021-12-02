@@ -51,16 +51,16 @@ class User extends BaseController
 			'last_name' => 'permit_empty|alpha_space',
 			'birth_date' => 'required|valid_date|less_than_today',
 			'gender' => 'required',
-			'profile_picture' => 'max_size[profile_picture,10240]|is_image[profile_picture]'
+			'profile_picture' => 'max_size[profile_picture,10240]|is_image[profile_picture]',
 			// |mime_in[profile_picture,image/jpg,image/jpeg,image/png,image/gif]|ext_in[profile_picture,jpg,jpeg,png,gif]
 		])) {
 			return redirect()->to(base_url('u/settings'))->withInput();
 		}
 
-		$error_msg = $this->accountModel->updateAccount($id, $this->request->getPost());
+		$account = $this->accountModel->updateAccount($id, $this->request->getPost());
 
-		if ($error_msg) {
-			return redirect()->to(base_url('u/settings'))->withInput()->with('settings_error_msg', $error_msg);
+		if (isset($account['error_msg'])) {
+			return redirect()->to(base_url('u/settings'))->withInput()->with('settings_error_msg', $account['error_msg']);
 		}
 
 		$session = session();
@@ -70,7 +70,7 @@ class User extends BaseController
 		$session->set('acc_first_name', $this->request->getPost('first_name'));
 		$session->set('acc_last_name', $this->request->getPost('last_name'));
 
-		$session->set('acc_profile_picture', db_connect()->table('accounts')->select('profile_picture')->where('id', $id)->get(1)->getFirstRow('array')['profile_picture']);
+		$session->set('acc_profile_picture', $account['profile_picture']);
 
 		return redirect()->to(base_url('u'));
 	}

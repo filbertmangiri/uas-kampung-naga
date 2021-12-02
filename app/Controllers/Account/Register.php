@@ -35,21 +35,21 @@ class Register extends BaseController
 			'last_name' => 'permit_empty|alpha_space',
 			'birth_date' => 'required|valid_date|less_than_today',
 			'gender' => 'required',
-			'profile_picture' => 'max_size[profile_picture,10240]|is_image[profile_picture]'
+			'profile_picture' => 'max_size[profile_picture,10240]|is_image[profile_picture]',
 			// |mime_in[profile_picture,image/jpg,image/jpeg,image/png,image/gif]|ext_in[profile_picture,jpg,jpeg,png,gif]
 		])) {
 			return redirect()->to(base_url('register'))->withInput();
 		}
 
-		$insertedID = $this->accountModel->insertAccount($this->request->getPost());
+		$account = $this->accountModel->insertAccount($this->request->getPost());
 
-		if ($insertedID <= 0) {
-			return redirect()->to(base_url('register'))->withInput()->with('register_error_msg', 'Gagal mendaftar');
+		if ($account['id'] <= 0) {
+			return redirect()->to(base_url('register'))->withInput()->with('register_error_msg', $account['error_msg']);
 		}
 
 		$session = session();
 
-		$session->set('acc_id', $insertedID);
+		$session->set('acc_id', $account['id']);
 
 		$session->set('acc_email', $this->request->getPost('email'));
 		$session->set('acc_username', $this->request->getPost('username'));
@@ -57,7 +57,7 @@ class Register extends BaseController
 		$session->set('acc_last_name', $this->request->getPost('last_name'));
 		$session->set('acc_gender', (bool) $this->request->getPost('gender'));
 
-		$session->set('acc_profile_picture', db_connect()->table('accounts')->select('profile_picture')->where('id', $insertedID)->get(1)->getFirstRow('array')['profile_picture']);
+		$session->set('acc_profile_picture', $account['profile_picture']);
 
 		$session->set('acc_logged_in', true);
 

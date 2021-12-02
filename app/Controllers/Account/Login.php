@@ -47,7 +47,7 @@ class Login extends BaseController
 			$session->set('acc_last_name', $account['last_name']);
 			$session->set('acc_gender', (bool) $account['gender']);
 
-			$session->set('acc_profile_picture', db_connect()->table('accounts')->select('profile_picture')->where('id', $account['id'])->get(1)->getFirstRow('array')['profile_picture']);
+			$session->set('acc_profile_picture', $account['profile_picture']);
 
 			if ($account['username'] === getenv('ADMIN_USERNAME')) {
 				$session->set('acc_admin', true);

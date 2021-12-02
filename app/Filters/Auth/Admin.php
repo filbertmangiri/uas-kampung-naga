@@ -6,11 +6,11 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
 
-class LoggedOut implements FilterInterface
+class Admin implements FilterInterface
 {
 	public function before(RequestInterface $request, $arguments = null)
 	{
-		if (session('acc_logged_in') === true) {
+		if (session('acc_admin') !== true) {
 			return redirect()->to(base_url($arguments[0] ?? ''));
 		}
 	}

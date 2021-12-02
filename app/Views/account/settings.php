@@ -229,7 +229,7 @@
 	$('#imageCropButton').on('click', function(ev) {
 		uploadCrop.croppie('result', {
 			type: 'base64',
-			// format: 'jpeg',
+			format: 'jpeg',
 			size: 'viewport'
 		}).then(function(resp) {
 			$('input[name=profile_picture_canvas]').val(resp);

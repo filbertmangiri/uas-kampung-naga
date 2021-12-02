@@ -44,10 +44,12 @@ class AccountModel extends Model
 		return false;
 	}
 
-	public function insertAccount($post)
+	public function insertAccount($data)
 	{
+		$return = [];
+
 		try {
-			$captcha = $post['g-recaptcha-response'] ?? '';
+			$captcha = $data['g-recaptcha-response'] ?? '';
 
 			if (!$captcha) {
 				throw new \Exception();
@@ -63,106 +65,114 @@ class AccountModel extends Model
 				throw new \Exception();
 			}
 
-			$insertedID = $this->insert([
-				'email' => $post['email'],
-				'username' => $post['username'],
-				'password' => password_hash($post['password'], PASSWORD_DEFAULT),
-				'first_name' => $post['first_name'],
-				'last_name' => $post['last_name'],
-				'birth_date' => $post['birth_date'],
-				'gender' => (bool) $post['gender'],
+			$return['id'] = $this->insert([
+				'email' => $data['email'],
+				'username' => $data['username'],
+				'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+				'first_name' => $data['first_name'],
+				'last_name' => $data['last_name'],
+				'birth_date' => $data['birth_date'],
+				'gender' => (bool) $data['gender'],
 			]);
 
-			if (!$post['profile_picture_canvas']) {
-				$fileName = 'default-' . (!(bool) $post['gender'] ? 'male' : 'female') . '.png';
+			if (!$data['profile_picture_canvas']) {
+				$return['profile_picture'] = 'default-' . (!(bool) $data['gender'] ? 'male' : 'female') . '.png';
 			} else {
-				$data = $post['profile_picture_canvas'];
-
-				list($type, $data) = explode(';', $data);
+				list($type, $image) = explode(';', $data['profile_picture_canvas']);
 				list(, $type) = explode('/', $type);
-				list(, $data) = explode(',', $data);
+				list(, $image) = explode(',', $image);
 
-				$data = base64_decode($data);
+				$image = base64_decode($image);
 
-				$fileName = 'profile-' . $insertedID . '.' . $type;
+				$return['profile_picture'] = 'profile-' . $return['id'] . '.' . $type;
 
-				file_put_contents('img/profile-pictures/' . $fileName, $data);
+				file_put_contents('img/profile-pictures/' . $return['profile_picture'], $image);
 			}
 
-			$this->update($insertedID, ['profile_picture' => $fileName]);
+			$this->update($return['id'], ['profile_picture' => $return['profile_picture']]);
 		} catch (\Exception $e) {
-			$insertedID = -1;
+			$return = ['error_msg' => $e->getMessage()];
 		}
 
-		return $insertedID;
+		return $return;
 	}
 
-	public function updateAccount($id, $post)
+	public function updateAccount($id, $data)
 	{
+		$return = [];
+
 		try {
-			if (count($post) <= 1) {
-				return $this->update($id, $post);
+			if (count($data) <= 1) {
+				return $this->update($id, $data);
 			}
 
-			if (!$post['profile_picture_canvas']) {
-				if (str_starts_with($post['old_profile_picture'], 'default-')) {
-					$fileName = 'default-' . (!(bool) $post['gender'] ? 'male' : 'female') . '.png';
+			if (!$data['profile_picture_canvas']) {
+				if (str_starts_with($data['old_profile_picture'], 'default-')) {
+					$return['profile_picture'] = 'default-' . (!(bool) $data['gender'] ? 'male' : 'female') . '.png';
 				} else {
-					$fileName = $post['old_profile_picture'];
+					$return['profile_picture'] = $data['old_profile_picture'];
 				}
 			} else {
-				$data = $post['profile_picture_canvas'];
-
-				list($type, $data) = explode(';', $data);
+				list($type, $image) = explode(';', $data['profile_picture_canvas']);
 				list(, $type) = explode('/', $type);
-				list(, $data) = explode(',', $data);
+				list(, $image) = explode(',', $image);
 
-				$data = base64_decode($data);
+				$image = base64_decode($image);
 
-				$fileName = 'profile-' . $id . '.' . $type;
+				$return['profile_picture'] = 'profile-' . $id . '.' . $type;
 
-				if (!str_starts_with($post['old_profile_picture'], 'default')) {
-					unlink('img/profile-pictures/' . $post['old_profile_picture']);
+				if (!str_starts_with($data['old_profile_picture'], 'default')) {
+					unlink('img/profile-pictures/' . $data['old_profile_picture']);
 				}
 
-				file_put_contents('img/profile-pictures/' . $fileName, $data);
+				file_put_contents('img/profile-pictures/' . $return['profile_picture'], $image);
 			}
 
 			$this->update($id, [
-				'email' => $post['email'],
-				'username' => $post['username'],
-				'password' => password_hash($post['password'], PASSWORD_DEFAULT),
-				'first_name' => $post['first_name'],
-				'last_name' => $post['last_name'],
-				'birth_date' => $post['birth_date'],
-				'gender' => (bool) $post['gender'],
-				'profile_picture' => $fileName
+				'email' => $data['email'],
+				'username' => $data['username'],
+				'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+				'first_name' => $data['first_name'],
+				'last_name' => $data['last_name'],
+				'birth_date' => $data['birth_date'],
+				'gender' => (bool) $data['gender'],
+				'profile_picture' => $return['profile_picture']
 			]);
 		} catch (\Exception $e) {
-			return $e->getMessage();
+			return ['error_msg' => $e->getMessage()];
 		}
 
-		return '';
+		return $return;
 	}
 
-	public function getAccount($post = [])
+	public function getAccount($where = [], $selectColumns = [], $withDeleted = false)
 	{
-		if (!$post) {
-			return $this->withDeleted()->findAll();
+		if (!$where) {
+			$builder = $this;
+
+			if ($selectColumns) {
+				$builder = $builder->select(implode(', ', $selectColumns));
+			}
+
+			if ($withDeleted) {
+				$builder = $builder->withDeleted();
+			}
+
+			return $builder->findAll();
 		}
 
-		if (!isset($post['email_username'])) {
-			return $this->where($post)->first();
+		if (!isset($where['email_username'])) {
+			return $this->where($where)->first();
 		}
 
 		$account = $this
 			->groupStart()
-			->where('email', $post['email_username'])
-			->orWhere('username', $post['email_username'])
+			->where('email', $where['email_username'])
+			->orWhere('username', $where['email_username'])
 			->groupEnd()
 			->first();
 
-		if (!$account || !password_verify($post['password'], $account['password'])) {
+		if (!$account || !password_verify($where['password'], $account['password'])) {
 			return [];
 		}
 
