@@ -23,7 +23,7 @@
 				<?php if (session('acc_logged_in') === true) : ?>
 					<li class="nav-item dropdown">
 						<a class="nav-link" href="#" id="myAccount" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="<?= base_url('img/profile-pictures/' . session('acc_profile_picture')); ?>" alt="My Profile Picture" height="30px" style="border-radius: 50%;">
+							<img src="<?= base_url('assets/img/profile-pictures/' . session('acc_profile_picture')); ?>" alt="My Profile Picture" height="30px" style="border-radius: 50%;">
 							<?= trim(session('acc_first_name') . ' ' . session('acc_last_name')); ?>
 						</a>
 

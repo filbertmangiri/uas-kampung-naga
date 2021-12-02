@@ -57,7 +57,7 @@ class Login extends BaseController
 
 			$session->set('acc_logged_in', true);
 
-			if (!file_exists('img/profile-pictures/' . session('acc_profile_picture'))) {
+			if (!file_exists('assets/img/profile-pictures/' . session('acc_profile_picture'))) {
 				$session->set('acc_profile_picture', 'default-' . (!session('acc_gender') ? 'male' : 'female') . '.png');
 				$this->accountModel->updateAccount(session('acc_id'), ['profile_picture' => session('acc_profile_picture')]);
 			}

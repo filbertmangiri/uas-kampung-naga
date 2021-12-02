@@ -41,7 +41,7 @@ class AccountSeeder extends Seeder
 				'first_name'		=> !$data['gender'] ? $faker->firstNameMale() : $faker->firstNameFemale(),
 				'last_name'			=> $faker->lastName(),
 				'birth_date'		=> $faker->dateTime($data['created_at'])->format('Y-m-d'),
-				'profile_picture'	=> 'profile-' . (!$data['gender'] ? 'male' : 'female') . '.png',
+				'profile_picture'	=> 'default-' . (!$data['gender'] ? 'male' : 'female') . '.png',
 				'is_management'		=> false
 			];
 

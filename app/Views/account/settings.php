@@ -48,7 +48,7 @@
 		<?= csrf_field(); ?>
 
 		<div class="mb-4 text-center">
-			<img src="<?= base_url('img/profile-pictures/' . $account['profile_picture']); ?>" alt="Foto Profil" width="150px" id="currentProfile" class="img-thumbnail" role="button" title="Upload foto profil" style="border-radius: 50%;">
+			<img src="<?= base_url('assets/img/profile-pictures/' . $account['profile_picture']); ?>" alt="Foto Profil" width="150px" id="currentProfile" class="img-thumbnail" role="button" title="Upload foto profil" style="border-radius: 50%;">
 			<input type="hidden" name="old_profile_picture" value="<?= $account['profile_picture']; ?>">
 			<input type="file" name="profile_picture" id="profilePicture" class="form-control <?= $validation->hasError('profile_picture') ? ' is-invalid' : ''; ?>" style="display: none;" accept="image/*">
 			<input type="hidden" name="profile_picture_canvas">

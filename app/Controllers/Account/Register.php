@@ -43,7 +43,7 @@ class Register extends BaseController
 
 		$account = $this->accountModel->insertAccount($this->request->getPost());
 
-		if ($account['id'] <= 0) {
+		if (!isset($account['id']) || $account['id'] <= 0) {
 			return redirect()->to(base_url('register'))->withInput()->with('register_error_msg', $account['error_msg']);
 		}
 

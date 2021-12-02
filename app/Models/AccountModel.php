@@ -86,7 +86,7 @@ class AccountModel extends Model
 
 				$return['profile_picture'] = 'profile-' . $return['id'] . '.' . $type;
 
-				file_put_contents('img/profile-pictures/' . $return['profile_picture'], $image);
+				file_put_contents('assets/img/profile-pictures/' . $return['profile_picture'], $image);
 			}
 
 			$this->update($return['id'], ['profile_picture' => $return['profile_picture']]);
@@ -122,10 +122,10 @@ class AccountModel extends Model
 				$return['profile_picture'] = 'profile-' . $id . '.' . $type;
 
 				if (!str_starts_with($data['old_profile_picture'], 'default')) {
-					unlink('img/profile-pictures/' . $data['old_profile_picture']);
+					unlink('assets/img/profile-pictures/' . $data['old_profile_picture']);
 				}
 
-				file_put_contents('img/profile-pictures/' . $return['profile_picture'], $image);
+				file_put_contents('assets/img/profile-pictures/' . $return['profile_picture'], $image);
 			}
 
 			$this->update($id, [
