@@ -11,3 +11,13 @@
 </div>
 
 <?= $this->endSection(); ?>
+
+<?= $this->section('scripts'); ?>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		<?= session('show_success_modal'); ?>
+	});
+</script>
+
+<?= $this->endSection(); ?>

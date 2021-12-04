@@ -29,8 +29,6 @@
 
 					<?= csrf_field(); ?>
 
-					<input type="hidden" name="id" value="" disabled>
-
 					<div class="form-floating mb-3">
 						<input type="email" name="email" class="form-control <?= $validation->hasError('email') ? ' is-invalid' : ''; ?>" placeholder=" " value="<?= (string) (old('email') ?? ''); ?>" autofocus>
 						<label>Email</label>

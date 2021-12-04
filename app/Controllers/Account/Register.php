@@ -61,6 +61,11 @@ class Register extends BaseController
 
 		$session->set('acc_logged_in', true);
 
-		return redirect()->to(base_url());
+		return redirect()->to(base_url())->with('show_success_modal', "Swal.fire({
+			icon: 'success',
+			text: 'Berhasil mendaftar',
+			showConfirmButton: false,
+			timer: 1500
+		});");
 	}
 }

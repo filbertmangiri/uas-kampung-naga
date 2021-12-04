@@ -63,6 +63,11 @@ class Login extends BaseController
 			}
 		}
 
-		return redirect()->to(base_url());
+		return redirect()->to(base_url())->with('show_success_modal', "Swal.fire({
+			icon: 'success',
+			text: 'Berhasil masuk',
+			showConfirmButton: false,
+			timer: 1500
+		});");
 	}
 }

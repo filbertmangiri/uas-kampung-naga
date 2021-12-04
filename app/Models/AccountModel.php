@@ -132,10 +132,6 @@ class AccountModel extends Model
 				}
 			}
 
-			if (isset($data['id'])) {
-				unset($data['id']);
-			}
-
 			if (isset($data['password'])) {
 				$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 			}
