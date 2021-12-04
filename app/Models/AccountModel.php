@@ -6,14 +6,15 @@ use CodeIgniter\Model;
 
 class AccountModel extends Model
 {
-	protected $table      = 'accounts';
-	protected $primaryKey = 'id';
-
+	protected $DBGroup          = 'default';
+	protected $table            = 'facilities';
+	protected $primaryKey       = 'id';
 	protected $useAutoIncrement = true;
-
-	protected $returnType     = 'array';
-
-	protected $allowedFields = [
+	protected $insertID         = 0;
+	protected $returnType       = 'array';
+	protected $useSoftDeletes   = true;
+	protected $protectFields    = true;
+	protected $allowedFields    = [
 		'email',
 		'username',
 		'password',
@@ -26,23 +27,29 @@ class AccountModel extends Model
 		'deleted_at'
 	];
 
+	// Dates
 	protected $useTimestamps = true;
+	protected $dateFormat    = 'datetime';
 	protected $createdField  = 'created_at';
 	protected $updatedField  = 'updated_at';
-
-	protected $useSoftDeletes = true;
 	protected $deletedField  = 'deleted_at';
 
-	protected $validationRules    = [];
-	protected $validationMessages = [];
-	protected $skipValidation     = true;
+	// Validation
+	protected $validationRules      = [];
+	protected $validationMessages   = [];
+	protected $skipValidation       = true;
+	protected $cleanValidationRules = true;
 
-	public function isExist($key, $value)
-	{
-		if ($this->select('id')->where($key, $value)->get(1)->getRowArray())
-			return true;
-		return false;
-	}
+	// Callbacks
+	protected $allowCallbacks = true;
+	protected $beforeInsert   = [];
+	protected $afterInsert    = [];
+	protected $beforeUpdate   = [];
+	protected $afterUpdate    = [];
+	protected $beforeFind     = [];
+	protected $afterFind      = [];
+	protected $beforeDelete   = [];
+	protected $afterDelete    = [];
 
 	public function insertAccount($data)
 	{
@@ -218,5 +225,12 @@ class AccountModel extends Model
 		}
 
 		return $account;
+	}
+
+	public function isExist($key, $value)
+	{
+		if ($this->select('id')->where($key, $value)->get(1)->getRowArray())
+			return true;
+		return false;
 	}
 }

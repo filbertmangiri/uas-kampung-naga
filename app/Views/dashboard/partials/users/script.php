@@ -1,3 +1,7 @@
+<!-- jQuery Validation -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js" integrity="sha256-TAzGN4WNZQPLqSYvi+dXQMKehTYFoVOnveRqbi42frA=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js" integrity="sha256-+NPi2ReKyI6yhNClJ78JSzbMmihq7Kjml84LwR631hM=" crossorigin="anonymous"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		<?= session('show_editing_modal'); ?>
@@ -237,6 +241,12 @@
 			$('#accSettingsForm').attr('action', '<?= base_url('user/update'); ?>/' + id);
 
 			$('#accountEditModal').modal('show');
+
+			$('input[name=email]').blur(() => validation('email', 'The email field must contain a unique value.', data.email));
+			$('#accSettingsForm').submit(() => validation('email', 'The email field must contain a unique value.', data.email));
+
+			$('input[name=username]').blur(() => validation('username', 'The username field must contain a unique value.', data.username));
+			$('#accSettingsForm').submit(() => validation('username', 'The username field must contain a unique value.', data.username));
 		});
 
 		$('#accountEditModal').on('hidden.bs.modal', function() {
@@ -334,6 +344,115 @@
 					});
 				}
 			});
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	function validation(key, error, old) {
+		let element = $('input[name=' + key + ']');
+
+		if (element.val().toLocaleLowerCase() != old.toLocaleLowerCase()) {
+			$.ajax({
+				data: {
+					key: key,
+					value: element.val()
+				},
+				type: 'post',
+				url: '<?= base_url('u/isexist') ?>',
+				success: function(data) {
+					if (data) {
+						element.addClass('is-invalid');
+						element.next().next('.invalid-feedback').html(error);
+					}
+				}
+			});
+		}
+	}
+
+	$(document).ready(function() {
+		$.validator.addMethod('lettersOnly', function(value, element) {
+			return this.optional(element) || /^[A-Za-z áãâäàéêëèíîïìóõôöòúûüùçñ]+$/i.test(value);
+		});
+
+		$.validator.addMethod('emailEx', function(value, element) {
+			return /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value);
+		});
+
+		$.validator.addMethod('noSpaceSymbol', function(value, element) {
+			return this.optional(element) || /^[a-zA-Z0-9_]+$/i.test(value);
+		});
+
+		$.validator.addMethod('lessThanToday', function(value, element) {
+			return new Date(value) < new Date();
+		});
+
+		$.validator.addMethod('fileTypeImage', function(value, element) {
+			return this.optional(element) || (element.files[0].size <= param * 1048576);
+		});
+
+		$('#accSettingsForm').validate({
+			ignore: 'input[name=profile_picture]',
+
+			rules: {
+				first_name: {
+					required: true,
+					lettersOnly: true,
+					minlength: 2
+				},
+				last_name: {
+					lettersOnly: true,
+				},
+				email: {
+					required: true,
+					emailEx: true
+				},
+				username: {
+					required: true,
+					noSpaceSymbol: true,
+					minlength: 5,
+					maxlength: 50
+				},
+				password: {
+					required: true,
+					minlength: 6
+				},
+				password_confirm: {
+					required: true,
+					equalTo: 'input[name=password]'
+				},
+				birth_date: {
+					required: true,
+					dateISO: true,
+					lessThanToday: true
+				},
+				profile_picture: {
+					fileTypeImage: true,
+					extension: 'jpg,jpeg,png,gif',
+					accept: 'image/*'
+				},
+				gender: {
+					required: true,
+				}
+			},
+
+			errorPlacement: function(error, element) {
+				element.next().next('.invalid-feedback').html(error.html());
+			},
+
+			highlight: function(element, errorClass, validClass) {
+				if ($(element).prop('type') != 'radio') {
+					$(element).addClass('is-invalid');
+				}
+			},
+
+			unhighlight: function(element, errorClass, validClass) {
+				$(element).removeClass('is-invalid');
+			},
+
+			submitHandler: function(form) {
+				form.submit();
+			}
 		});
 	});
 </script>
