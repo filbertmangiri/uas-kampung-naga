@@ -29,13 +29,13 @@ class Login extends BaseController
 			'email_username' => 'required',
 			'password' => 'required'
 		])) {
-			return redirect()->to(base_url('login'))->withInput()->with('login_error_msg', 'Username atau password salah');
+			return redirect()->back()->withInput()->with('login_error_msg', 'Username atau password salah');
 		}
 
 		$account = $this->accountModel->getAccount($this->request->getPost());
 
 		if (!$account) {
-			return redirect()->to(base_url('login'))->withInput()->with('login_error_msg', 'Username atau password salah');
+			return redirect()->back()->withInput()->with('login_error_msg', 'Username atau password salah');
 		} else {
 			$session = session();
 

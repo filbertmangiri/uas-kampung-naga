@@ -10,31 +10,33 @@
 
 <h1>Dashboard | Admin</h1>
 
-<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-	<li class="nav-item" role="presentation">
-		<button class="nav-link dashboard-accordion active" id="usersTab" data-bs-toggle="pill" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">Users</button>
-	</li>
+<div class="container">
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+		<li class="nav-item" role="presentation">
+			<button class="nav-link dashboard-accordion active" id="usersTab" data-bs-toggle="pill" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">Users</button>
+		</li>
 
-	<li class="nav-item" role="presentation">
-		<button class="nav-link dashboard-accordion" id="facilitiesTab" data-bs-toggle="pill" data-bs-target="#facilities" type="button" role="tab" aria-controls="facilities" aria-selected="false">Facilities</button>
-	</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link dashboard-accordion" id="facilitiesTab" data-bs-toggle="pill" data-bs-target="#facilities" type="button" role="tab" aria-controls="facilities" aria-selected="false">Facilities</button>
+		</li>
 
-	<li class="nav-item" role="presentation">
-		<button class="nav-link dashboard-accordion" id="requestsTab" data-bs-toggle="pill" data-bs-target="#requests" type="button" role="tab" aria-controls="requests" aria-selected="false">Requests</button>
-	</li>
-</ul>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link dashboard-accordion" id="requestsTab" data-bs-toggle="pill" data-bs-target="#requests" type="button" role="tab" aria-controls="requests" aria-selected="false">Requests</button>
+		</li>
+	</ul>
 
-<div class="tab-content" id="pills-tabContent">
-	<div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="usersTab">
-		<?= $this->include('dashboard/partials/users/main'); ?>
-	</div>
+	<div class="tab-content" id="pills-tabContent">
+		<div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="usersTab">
+			<?= $this->include('dashboard/partials/users/main'); ?>
+		</div>
 
-	<div class="tab-pane fade" id="facilities" role="tabpanel" aria-labelledby="facilitiesTab">
-		<?= $this->include('dashboard/partials/facilities/main'); ?>
-	</div>
+		<div class="tab-pane fade" id="facilities" role="tabpanel" aria-labelledby="facilitiesTab">
+			<?= $this->include('dashboard/partials/facilities/main'); ?>
+		</div>
 
-	<div class="tab-pane fade" id="requests" role="tabpanel" aria-labelledby="requestsTab">
-		<?= $this->include('dashboard/partials/requests/main'); ?>
+		<div class="tab-pane fade" id="requests" role="tabpanel" aria-labelledby="requestsTab">
+			<?= $this->include('dashboard/partials/requests/main'); ?>
+		</div>
 	</div>
 </div>
 
