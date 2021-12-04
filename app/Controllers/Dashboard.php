@@ -22,53 +22,17 @@ class Dashboard extends BaseController
 
 		if (session('acc_admin') === true) {
 			$data['title'] .= ' | Admin';
+			$data['validation'] = \Config\Services::validation();
 
-			$data['accounts'] = $this->accountModel->getAccount([], [
-				'id',
-				'email',
-				'username',
-				'first_name',
-				'last_name',
-				'birth_date',
-				'gender',
-				'profile_picture',
-				'is_management',
-				'updated_at',
-				'deleted_at'
-			], true);
-
-			return view('dashboard/admin', $data);
+			return view('dashboard/roles/admin/main', $data);
 		}
 
 		if (session('acc_management') === true) {
 			$data['title'] .= ' | Management';
 
-			return view('dashboard/management', $data);
+			return view('dashboard/roles/management/main', $data);
 		}
 
-		return view('dashboard/user', $data);
-	}
-
-	public function getAccounts()
-	{
-		$accounts = $this->accountModel->getAccount([], [
-			'id',
-			'email',
-			'username',
-			'first_name',
-			'last_name',
-			'birth_date',
-			'gender',
-			'profile_picture',
-			'is_management',
-			'updated_at',
-			'deleted_at'
-		], true);
-
-		echo json_encode([
-			'recordsTotal' => count($accounts),
-			'recordsFiltered' => count($accounts),
-			'data' => $accounts
-		]);
+		return view('dashboard/roles/user/main', $data);
 	}
 }

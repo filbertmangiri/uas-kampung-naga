@@ -199,7 +199,10 @@
 			}
 			reader.readAsDataURL(input.files[0]);
 		} else {
-			alert('Mohon maaf, browser anda tidak mendukung API FileReader');
+			Swal.fire({
+				icon: 'error',
+				text: 'Mohon maaf, browser anda tidak mendukung API FileReader'
+			});
 		}
 	}
 

@@ -5,7 +5,7 @@ namespace App\Controllers\Account;
 use App\Controllers\BaseController;
 use App\Models\AccountModel;
 
-class User extends BaseController
+class Account extends BaseController
 {
 	protected $accountModel;
 
@@ -73,6 +73,29 @@ class User extends BaseController
 		$session->set('acc_profile_picture', $account['profile_picture']);
 
 		return redirect()->to(base_url('u'));
+	}
+
+	public function getAllAccounts($onlyDeleted = false)
+	{
+		$accounts = $this->accountModel->getAccount([], [
+			'id',
+			'email',
+			'username',
+			'first_name',
+			'last_name',
+			'birth_date',
+			'gender',
+			'profile_picture',
+			'is_management',
+			'updated_at',
+			'deleted_at'
+		], (bool) $onlyDeleted);
+
+		echo json_encode([
+			'recordsTotal' => count($accounts),
+			'recordsFiltered' => count($accounts),
+			'data' => $accounts
+		]);
 	}
 
 	public function isExist()
