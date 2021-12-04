@@ -23,11 +23,13 @@
 
 							<?= session('acc_settings_error_msg'); ?>
 
-							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+							<button type="button" class="btn-close" id="errorCloseButton" data-bs-dismiss="alert" aria-label="Close"></button>
 						</div>
 					<?php endif; ?>
 
 					<?= csrf_field(); ?>
+
+					<input type="hidden" name="old_profile_picture" value="<?= (string) (old('old_profile_picture') ?? ''); ?>">
 
 					<div class="form-floating mb-3">
 						<input type="email" name="email" class="form-control <?= $validation->hasError('email') ? ' is-invalid' : ''; ?>" placeholder=" " value="<?= (string) (old('email') ?? ''); ?>" autofocus>
@@ -78,6 +80,22 @@
 						<div class="invalid-feedback">
 							<?= $validation->getError('birth_date'); ?>
 						</div>
+					</div>
+
+					<div class="form-group mb-4">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="gender" id="genderMale" value="0">
+							<label class="form-check-label" for="genderMale">Laki-laki</label>
+						</div>
+
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="gender" id="genderFemale" value="1">
+							<label class="form-check-label" for="genderFemale">Perempuan</label>
+						</div>
+					</div>
+
+					<div class="invalid-feedback">
+						<?= $validation->getError('gender'); ?>
 					</div>
 				</div>
 				<div class="modal-footer">

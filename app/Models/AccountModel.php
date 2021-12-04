@@ -106,31 +106,29 @@ class AccountModel extends Model
 				return $this->update($id, $data);
 			}
 
-			if (isset($data['profile_picture_canvas'])) {
-				if (!$data['profile_picture_canvas']) {
-					if (str_starts_with($data['old_profile_picture'], 'default-')) {
-						$return['profile_picture'] = 'default-' . (!(bool) $data['gender'] ? 'male' : 'female') . '.png';
-					} else {
-						$return['profile_picture'] = $data['old_profile_picture'];
-					}
+			if (!isset($data['profile_picture_canvas']) || !$data['profile_picture_canvas']) {
+				if (!isset($data['old_profile_picture']) || str_starts_with($data['old_profile_picture'], 'default-')) {
+					$return['profile_picture'] = 'default-' . (!(bool) $data['gender'] ? 'male' : 'female') . '.png';
 				} else {
-					list($type, $image) = explode(';', $data['profile_picture_canvas']);
-					list(, $type) = explode('/', $type);
-					list(, $image) = explode(',', $image);
-
-					$image = base64_decode($image);
-
-					$return['profile_picture'] = 'profile-' . $id . '.' . $type;
-
-					if (!str_starts_with($data['old_profile_picture'], 'default')) {
-						unlink('assets/img/profile-pictures/' . $data['old_profile_picture']);
-					}
-
-					file_put_contents('assets/img/profile-pictures/' . $return['profile_picture'], $image);
-
-					$data['profile_picture'] = $return['profile_picture'];
+					$return['profile_picture'] = $data['old_profile_picture'];
 				}
+			} else {
+				list($type, $image) = explode(';', $data['profile_picture_canvas']);
+				list(, $type) = explode('/', $type);
+				list(, $image) = explode(',', $image);
+
+				$image = base64_decode($image);
+
+				$return['profile_picture'] = 'profile-' . $id . '.' . $type;
+
+				if (!str_starts_with($data['old_profile_picture'], 'default')) {
+					unlink('assets/img/profile-pictures/' . $data['old_profile_picture']);
+				}
+
+				file_put_contents('assets/img/profile-pictures/' . $return['profile_picture'], $image);
 			}
+
+			$data['profile_picture'] = $return['profile_picture'];
 
 			if (isset($data['password'])) {
 				$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);

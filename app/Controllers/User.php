@@ -16,22 +16,26 @@ class User extends BaseController
 
 	public function update($id)
 	{
-		// $id = $this->request->getPost('id');
-
 		if (!$this->validate([
 			'email' => 'required|valid_email|is_unique[accounts.email,id,' . $id . ']',
 			'username' => 'required|alpha_numeric|min_length[5]|max_length[50]|is_unique[accounts.username,id,' . $id . ']',
 			'first_name' => 'required|alpha_space|min_length[2]',
 			'last_name' => 'permit_empty|alpha_space',
-			'birth_date' => 'required|valid_date|less_than_today'
+			'birth_date' => 'required|valid_date|less_than_today',
+			// 'gender' => 'required'
 		])) {
-			return redirect()->to(base_url('dashboard'))->withInput()->with('show_editing_modal', "$('#accountEditModal').modal('show');");
+			return redirect()->to(base_url('dashboard'))->withInput()
+				->with('show_editing_modal', "$('#accountEditModal').modal('show');
+					$('#accSettingsForm input[name=gender][value=' + " . old('gender') . " + ']').prop('checked', 'true');");
 		}
 
 		$result = $this->accountModel->updateAccount($id, $this->request->getPost());
 
 		if (isset($result['error_msg'])) {
-			return redirect()->to(base_url('dashboard'))->withInput()->with('acc_settings_error_msg', $result['error_msg'])->with('show_editing_modal', "$('#accountEditModal').modal('show');");
+			return redirect()->to(base_url('dashboard'))->withInput()
+				->with('acc_settings_error_msg', $result['error_msg'])
+				->with('show_editing_modal', "$('#accountEditModal').modal('show');
+					$('#accSettingsForm input[name=gender][value=' + " . old('gender') . " + ']').prop('checked', 'true');");
 		}
 
 		return redirect()->to(base_url('dashboard'))->with('show_editing_modal', "Swal.fire({

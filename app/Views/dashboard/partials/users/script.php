@@ -90,7 +90,7 @@
 						'<span style="display: inline-block; width: 140px;">Tanggal Lahir</span> = ' + data.birth_date + '<br>' +
 						'<span style="display: inline-block; width: 140px;">Jenis Kelamin</span> = ' + (data.gender == 0 ? 'Laki-laki' : 'Perempuan') + '<br>' +
 						'<span style="display: inline-block; width: 140px;">Terakhir di update</span> = ' + data.updated_at + '<br>' +
-						'<button type="button" class="btn btn-warning btn-sm" id="editButton" data-acc-id="' + data.id + '">Edit</button> ' +
+						'<button type="button" class="btn btn-warning btn-sm" id="editButton" data-acc-id="' + data.id + '" data-acc-child="true">Edit</button> ' +
 						'<button type="button" class="btn btn-danger btn-sm" id="deleteButton" data-acc-id="' + data.id + '">Hapus</button>'
 					'</div>';
 
@@ -215,15 +215,24 @@
 		// Edit
 		$('#nonDeletedTable').on('click', '#editButton', function() {
 			let id = $(this).attr('data-acc-id');
-			let data = nonDeletedTable.row($(this).closest('tr')).data();
+			let row;
 
-			// $('#accSettingsForm input[name=id]').val(id);
+			if ($(this).attr('data-acc-child') == true) {
+				row = $(this).closest('tr').prev('tr.dt-hasChild.shown')[0];
+			} else {
+				row = $(this).closest('tr');
+			}
 
+			let data = nonDeletedTable.row(row).data();
+
+			$('#accSettingsForm input[name=old_profile_picture]').val(data.profile_picture);
 			$('#accSettingsForm input[name=email]').val(data.email);
 			$('#accSettingsForm input[name=username]').val(data.username);
 			$('#accSettingsForm input[name=first_name]').val(data.first_name);
 			$('#accSettingsForm input[name=last_name]').val(data.last_name);
 			$('#accSettingsForm input[name=birth_date]').val(data.birth_date);
+
+			$('#accSettingsForm input[name=gender][value=' + data.gender + ']').prop('checked', 'true');
 
 			$('#accSettingsForm').attr('action', '<?= base_url('user/update'); ?>/' + id);
 
@@ -231,6 +240,8 @@
 		});
 
 		$('#accountEditModal').on('hidden.bs.modal', function() {
+			$('#errorCloseButton').click();
+
 			$('#accSettingsForm .invalid-feedback').html('');
 			$('#accSettingsForm input').removeClass('is-invalid');
 		});

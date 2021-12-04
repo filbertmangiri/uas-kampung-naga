@@ -150,7 +150,7 @@
 
 		<div class="form-group mb-3">
 			<input type="hidden" class="hiddenRecaptcha required" name="hidden_recaptcha" id="hiddenRecaptcha">
-			<div class="g-recaptcha" data-sitekey="<?= env('RECAPTCHA_SITE_KEY'); ?>" data-callback="recaptchaCallback">
+			<div class="g-recaptcha" data-sitekey="<?= getenv('RECAPTCHA_SITE_KEY'); ?>" data-callback="recaptchaCallback">
 			</div>
 
 			<div class="invalid-feedback">

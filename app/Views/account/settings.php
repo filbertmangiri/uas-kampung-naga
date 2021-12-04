@@ -248,20 +248,6 @@
 			$('#profilePicture').click();
 		});
 
-		// $('#profilePicture').on('change', function() {
-		// 	const [file] = $(this).prop('files');
-		// 	if (file) {
-		// 		console.log(URL.createObjectURL(file));
-		// 		$('#currentProfile').attr('src', URL.createObjectURL(file));
-		// 	}
-		// });
-
-		/**
-		 * @param {string} key Input name and database field key
-		 * @param {string} error Error message
-		 * @param {string} old Old value
-		 */
-
 		function validation(key, error, old) {
 			let element = $('input[name=' + key + ']');
 
@@ -282,6 +268,7 @@
 				});
 			}
 		}
+
 		$('input[name=email]').blur(() => validation('email', 'The email field must contain a unique value.', '<?= $account['email']; ?>'));
 		$('#settingsForm').submit(() => validation('email', 'The email field must contain a unique value.', '<?= $account['email']; ?>'));
 
