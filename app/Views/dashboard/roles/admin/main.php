@@ -31,7 +31,7 @@
 		</div>
 
 		<div class="tab-pane fade" id="facilities" role="tabpanel" aria-labelledby="facilitiesTab">
-			<?= $this->include('dashboard/partials/facilities/main'); ?>
+			<?= $this->include('dashboard/partials/facilities/admin/main'); ?>
 		</div>
 
 		<div class="tab-pane fade" id="requests" role="tabpanel" aria-labelledby="requestsTab">
@@ -44,13 +44,8 @@
 
 <?= $this->section('modals'); ?>
 
-<div class="modal fade" id="profilePictureModal" tabindex="-1" aria-labelledby="profilePictureModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<img id="profilePictureZoomedImage">
-	</div>
-</div>
-
 <?= $this->include('dashboard/partials/users/modal'); ?>
+<?= $this->include('dashboard/partials/facilities/admin/modal'); ?>
 
 <?= $this->endSection(); ?>
 
@@ -75,25 +70,10 @@
 		$('.dashboard-accordion').click(function() {
 			localStorage.setItem('dashboardAccordion', $(this).prop('id'));
 		});
-
-		let usersAccordion = localStorage.getItem('usersAccordion');
-
-		if (usersAccordion) {
-			let targetFrom = $('.users-accordion[aria-selected=true]').attr('data-bs-target');
-			$('.users-accordion[aria-selected=true]').removeClass('active').attr('aria-selected', 'false');
-			let targetTo = $('#' + usersAccordion).attr('data-bs-target');
-			$('#' + usersAccordion).addClass('active').attr('aria-selected', 'true');
-
-			$(targetFrom).removeClass('active show');
-			$(targetTo).addClass('active show');
-		}
-
-		$('.users-accordion').click(function() {
-			localStorage.setItem('usersAccordion', $(this).prop('id'));
-		});
 	});
 </script>
 
 <?= $this->include('dashboard/partials/users/script'); ?>
+<?= $this->include('dashboard/partials/facilities/admin/script'); ?>
 
 <?= $this->endSection(); ?>

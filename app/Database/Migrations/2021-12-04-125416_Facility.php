@@ -29,21 +29,31 @@ class Facility extends Migration
 				'constraint' => '255',
 				'default' => 'default.png'
 			],
+			'description' => [
+				'type' => 'LONGTEXT',
+				'null' => true
+			],
+			'is_rented' => [
+				'type' => 'BIT',
+				'default' => false
+			],
 			'customer_id' => [
 				'type' => 'INT',
 				'unsigned' => true,
-				'default' => 0
+				// 'default' => 0
+				'null' => true
 			],
 			'management_id' => [
 				'type' => 'INT',
 				'unsigned' => true,
-				'default' => 0
+				// 'default' => 0
+				'null' => true
 			],
-			'rent_date' => [
+			'start_date' => [
 				'type' => 'DATETIME',
 				'null' => true
 			],
-			'return_date' => [
+			'end_date' => [
 				'type' => 'DATETIME',
 				'null' => true
 			],

@@ -14,19 +14,6 @@ class Account extends BaseController
 		$this->accountModel = new AccountModel();
 	}
 
-	public function index($username = '')
-	{
-		if (!$username) {
-			return redirect()->to(base_url('u/' . session('acc_username')));
-		}
-
-		$data['username'] = $username;
-		$data['account'] = $this->accountModel->getAccount(['username' => $username]);
-		$data['title'] = $data['account'] ? trim($data['account']['first_name'] . ' ' . $data['account']['last_name']) . ' (' . $data['account']['username'] . ')' : '';
-
-		return view('account/detail', $data);
-	}
-
 	public function settings()
 	{
 		$data = [
@@ -45,7 +32,7 @@ class Account extends BaseController
 		if (!$this->validate([
 			'email' => 'required|valid_email|is_unique[accounts.email,id,' . $id . ']',
 			'username' => 'required|alpha_numeric|min_length[5]|max_length[50]|is_unique[accounts.username,id,' . $id . ']',
-			'password' => 'required|min_length[6]',
+			'password' => 'required|min_length[5]',
 			'password_confirm' => 'required|matches[password]',
 			'first_name' => 'required|alpha_space|min_length[2]',
 			'last_name' => 'permit_empty|alpha_space',
@@ -54,13 +41,13 @@ class Account extends BaseController
 			'profile_picture' => 'max_size[profile_picture,10240]|is_image[profile_picture]',
 			// |mime_in[profile_picture,image/jpg,image/jpeg,image/png,image/gif]|ext_in[profile_picture,jpg,jpeg,png,gif]
 		])) {
-			return redirect()->to(base_url('u/settings'))->withInput();
+			return redirect()->back()->withInput();
 		}
 
 		$account = $this->accountModel->updateAccount($id, $this->request->getPost());
 
 		if (isset($account['error_msg'])) {
-			return redirect()->to(base_url('u/settings'))->withInput()->with('settings_error_msg', $account['error_msg']);
+			return redirect()->back()->withInput()->with('settings_error_msg', $account['error_msg']);
 		}
 
 		$session = session();
@@ -73,36 +60,5 @@ class Account extends BaseController
 		$session->set('acc_profile_picture', $account['profile_picture']);
 
 		return redirect()->to(base_url('u'));
-	}
-
-	public function getAllAccounts($onlyDeleted = false)
-	{
-		$accounts = $this->accountModel->getAccount([], [
-			'id',
-			'email',
-			'username',
-			'first_name',
-			'last_name',
-			'birth_date',
-			'gender',
-			'profile_picture',
-			'is_management',
-			'updated_at',
-			'deleted_at'
-		], (bool) $onlyDeleted);
-
-		echo json_encode([
-			'recordsTotal' => count($accounts),
-			'recordsFiltered' => count($accounts),
-			'data' => $accounts
-		]);
-	}
-
-	public function isExist()
-	{
-		if ($this->accountModel->isExist($this->request->getPost('key'), $this->request->getPost('value')))
-			echo true;
-		else
-			echo false;
 	}
 }

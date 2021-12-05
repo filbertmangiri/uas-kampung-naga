@@ -2,9 +2,6 @@
 
 <?= $this->section('content'); ?>
 
-<!-- AOS -->
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
 <?= $this->endSection(); ?>
 
 <?= $this->section('content'); ?>
@@ -51,7 +48,7 @@
 
 						<div class="form-floating mb-3">
 							<input type="password" name="password" class="form-control" placeholder=" ">
-							<label>Password</label>
+							<label>Password</label>s=""
 						</div>
 
 						<button type="submit" class="btn btn-dark text-white">Login</button>
@@ -65,26 +62,62 @@
 		<div class="container text-white" style="padding-top: 100px">
 			<div class="row justify-content-center">
 				<div class="col-lg-6">
-					<h2>Tentang Perpustakaan Kami</h2>
-					<p class="lead">The background images used in this template are sourced from Unsplash and are
-						open
-						source and free to use.</p>
-					<p class="mb-0">I can't tell you how many people say they were turned off from science because
-						of a
-						science teacher that completely sucked out all the inspiration and enthusiasm they had for
-						the
-						course.</p>
+					<h2>Tentang Jasa Kami</h2>
+					<p class="lead">Dibangun dari kebaikan manusia sejak tahun 2010. 11 tahun dipercaya dalam menyediakan beberapa fasilitas
+						untuk mendukung keperluan pernikahan hingga acara keluarga
+					</p>
+					<p class="mb-0">Sudah lebih dari 5000 pelanggan setia kami dari beberapa kalangan yang sudah mempercayai kami
+						untuk menggunakan fasilitas kami.
+					</p>
 				</div>
 			</div>
 		</div>
 </section>
 
+<footer id="footer" class="footer" style="width: 100%; height: 50; background-color: #301a08;">
+	<div class="footer-top">
+		<div class="container">
+			<div class="row gy-5">
+				<div class="col-lg-6 col-md-12 gx-5 footer-info text-white">
+					<h4>Kampung Naga Facilities</h4>
+					<p>
+						Jl. Scientia Boulevard, Curug Sangerang, Kecamatan Kelapa Dua, <br>
+						Kabupaten Tangerang, Banten 15810<br>
+						Indonesia <br>
+					</p>
+				</div>
+
+				<div class="col-lg-3 col-md-12 footer-contact text-center text-md-start text-white">
+					<h4>Useful Links</h4>
+					<ul>
+						<li><i class="bi bi-chevron-right"></i> <a class="link-light" href="<?= base_url(); ?>">Home</a></li>
+					</ul>
+					<h4>Our Services</h4>
+					<ul>
+						<li><i class="bi bi-chevron-right"></i> <a class="link-light" href="<?= base_url('dashboard') ?>">Facility Request</a></li>
+					</ul>
+				</div>
+
+				<div class="col-lg-3 col-md-12 footer-contact text-center text-md-start text-white">
+					<h4>Hubungi Kami</h4>
+					<p>
+						<strong>Telepon:</strong> +62 21 5422 0808<br>
+						<strong>Email:</strong> info@umn.ac.id<br>
+					<div class="social-links mt-3 text-white">
+						<a href="https://www.twitter.com/" class="twitter link-light"><i class="bi bi-twitter"></i></a>
+						<a href="https://www.facebook.com/" class="facebook link-light"><i class="bi bi-facebook"></i></a>
+						<a href="https://www.instagram.com/" class="instagram link-light"><i class="bi bi-instagram"></i></a>
+						<a href="https://www.linkedin.com/" class="linkedin link-light"><i class="bi bi-linkedin"></i></a>
+					</div>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
 <?= $this->endSection(); ?>
 
 <?= $this->section('scripts'); ?>
-
-<!-- AOS -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {

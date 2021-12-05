@@ -23,13 +23,13 @@
 				<?php if (session('acc_logged_in') === true) : ?>
 					<li class="nav-item dropdown">
 						<a class="nav-link" href="#" id="myAccount" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="<?= base_url('assets/img/profile-pictures/' . session('acc_profile_picture')); ?>" alt="My Profile Picture" height="30px" style="border-radius: 50%;">
+							<img src="<?= base_url('assets/img/users/' . session('acc_profile_picture')); ?>" alt="Foto Profil Saya" height="30px" style="border-radius: 50%;">
 							<?= trim(session('acc_first_name') . ' ' . session('acc_last_name')); ?>
 						</a>
 
 						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="myAccount">
 							<li><a class="dropdown-item" href="<?= base_url('u'); ?>">Profil Saya</a></li>
-							<li><a class="dropdown-item" href="<?= base_url('u/settings'); ?>">Ubah Profil</a></li>
+							<li><a class="dropdown-item" href="<?= base_url('account/settings'); ?>">Ubah Profil</a></li>
 							<li><a class="dropdown-item" href="<?= base_url('dashboard'); ?>">Dashboard</a></li>
 							<li>
 								<hr class="dropdown-divider">

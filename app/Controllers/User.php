@@ -14,6 +14,19 @@ class User extends BaseController
 		$this->accountModel = new AccountModel();
 	}
 
+	public function index($username = '')
+	{
+		if (!$username) {
+			return redirect()->to(base_url('u/' . session('acc_username')));
+		}
+
+		$data['username'] = $username;
+		$data['account'] = $this->accountModel->getAccount(['username' => $username]);
+		$data['title'] = $data['account'] ? trim($data['account']['first_name'] . ' ' . $data['account']['last_name']) . ' (' . $data['account']['username'] . ')' : '';
+
+		return view('details/user', $data);
+	}
+
 	public function update($id)
 	{
 		if (!$this->validate([
@@ -22,23 +35,23 @@ class User extends BaseController
 			'first_name' => 'required|alpha_space|min_length[2]',
 			'last_name' => 'permit_empty|alpha_space',
 			'birth_date' => 'required|valid_date|less_than_today',
-			// 'gender' => 'required'
+			'gender' => 'required'
 		])) {
-			return redirect()->to(base_url('dashboard'))->withInput()
-				->with('show_editing_modal', "$('#accountEditModal').modal('show');
+			return redirect()->back()->withInput()
+				->with('show_user_editing_modal', "$('#accountEditModal').modal('show');
 					$('#accSettingsForm input[name=gender][value=' + " . old('gender') . " + ']').prop('checked', 'true');");
 		}
 
 		$result = $this->accountModel->updateAccount($id, $this->request->getPost());
 
 		if (isset($result['error_msg'])) {
-			return redirect()->to(base_url('dashboard'))->withInput()
+			return redirect()->back()->withInput()
 				->with('acc_settings_error_msg', $result['error_msg'])
-				->with('show_editing_modal', "$('#accountEditModal').modal('show');
+				->with('show_user_editing_modal', "$('#accountEditModal').modal('show');
 					$('#accSettingsForm input[name=gender][value=' + " . old('gender') . " + ']').prop('checked', 'true');");
 		}
 
-		return redirect()->to(base_url('dashboard'))->with('show_editing_modal', "Swal.fire({
+		return redirect()->back()->with('show_user_editing_modal', "Swal.fire({
 			icon: 'success',
 			text: 'Akun berhasil diubah',
 			showConfirmButton: false,
@@ -58,5 +71,24 @@ class User extends BaseController
 		$result = $this->accountModel->restoreAccount($this->request->getPost('id'));
 
 		echo $result['error_msg'] ?? '';
+	}
+
+	public function getAllAccounts($onlyDeleted = false)
+	{
+		$accounts = $this->accountModel->getAccount([], [], (bool) $onlyDeleted);
+
+		echo json_encode([
+			'recordsTotal' => count($accounts),
+			'recordsFiltered' => count($accounts),
+			'data' => $accounts
+		]);
+	}
+
+	public function isExist()
+	{
+		if ($this->accountModel->isExist($this->request->getPost('key'), $this->request->getPost('value')))
+			echo true;
+		else
+			echo false;
 	}
 }

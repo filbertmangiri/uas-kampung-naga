@@ -1,3 +1,9 @@
+<div class="modal fade" id="profilePictureModal" tabindex="-1" aria-labelledby="profilePictureModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<img id="profilePictureZoomedImage">
+	</div>
+</div>
+
 <div class="modal fade" id="accountEditModal" tabindex="-1" aria-labelledby="accountEditModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">

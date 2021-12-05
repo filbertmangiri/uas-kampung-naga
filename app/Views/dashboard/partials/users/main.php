@@ -11,7 +11,7 @@
 
 	<div class="tab-content" id="pills-tabContent">
 		<div class="tab-pane fade show active" id="nonDeletedUsers" role="tabpanel" aria-labelledby="nonDeletedUsersTab">
-			<table id="nonDeletedTable" class="table table-striped" style="width:100%">
+			<table id="nonDeletedUsersTable" class="table table-striped" style="width:100%">
 				<thead>
 					<tr>
 						<th></th>
@@ -30,7 +30,7 @@
 		</div>
 
 		<div class="tab-pane fade" id="deletedUsers" role="tabpanel" aria-labelledby="deletedUsersTab">
-			<table id="deletedTable" class="table table-striped" style="width:100%">
+			<table id="deletedUsersTable" class="table table-striped" style="width:100%">
 				<thead>
 					<tr>
 						<th></th>

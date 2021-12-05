@@ -24,6 +24,8 @@ class AccountModel extends Model
 		'gender',
 		'profile_picture',
 		'is_management',
+		'created_at',
+		'updated_at',
 		'deleted_at'
 	];
 
@@ -91,9 +93,9 @@ class AccountModel extends Model
 
 				$image = base64_decode($image);
 
-				$return['profile_picture'] = 'profile-' . $return['id'] . '.' . $type;
+				$return['profile_picture'] = 'user-' . $return['id'] . '.' . $type;
 
-				file_put_contents('assets/img/profile-pictures/' . $return['profile_picture'], $image);
+				file_put_contents('assets/img/users/' . $return['profile_picture'], $image);
 			}
 
 			$this->update($return['id'], ['profile_picture' => $return['profile_picture']]);
@@ -126,13 +128,13 @@ class AccountModel extends Model
 
 				$image = base64_decode($image);
 
-				$return['profile_picture'] = 'profile-' . $id . '.' . $type;
+				$return['profile_picture'] = 'user-' . $id . '.' . $type;
 
 				if (!str_starts_with($data['old_profile_picture'], 'default')) {
-					unlink('assets/img/profile-pictures/' . $data['old_profile_picture']);
+					unlink('assets/img/users/' . $data['old_profile_picture']);
 				}
 
-				file_put_contents('assets/img/profile-pictures/' . $return['profile_picture'], $image);
+				file_put_contents('assets/img/users/' . $return['profile_picture'], $image);
 			}
 
 			$data['profile_picture'] = $return['profile_picture'];
@@ -169,7 +171,7 @@ class AccountModel extends Model
 			}
 
 			if ($purge && !str_starts_with($profile_picture, 'default')) {
-				unlink('assets/img/profile-pictures/' . $profile_picture);
+				unlink('assets/img/users/' . $profile_picture);
 			}
 
 			$this->delete($id, $purge);
