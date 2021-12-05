@@ -8,9 +8,9 @@
 
 <?= $this->section('content'); ?>
 
-<h1>Dashboard | Admin</h1>
-
 <div class="container">
+	<h1>Dashboard | Admin</h1>
+
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 		<li class="nav-item" role="presentation">
 			<button class="nav-link dashboard-accordion active" id="usersTab" data-bs-toggle="pill" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">Users</button>
