@@ -35,7 +35,7 @@
 		</div>
 
 		<div class="tab-pane fade" id="requests" role="tabpanel" aria-labelledby="requestsTab">
-			<?= $this->include('dashboard/partials/requests/main'); ?>
+			<?= $this->include('dashboard/partials/requests/admin/main'); ?>
 		</div>
 	</div>
 </div>
@@ -75,5 +75,6 @@
 
 <?= $this->include('dashboard/partials/users/script'); ?>
 <?= $this->include('dashboard/partials/facilities/admin/script'); ?>
+<?= $this->include('dashboard/partials/requests/admin/script'); ?>
 
 <?= $this->endSection(); ?>

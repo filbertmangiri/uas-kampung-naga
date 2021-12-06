@@ -8,9 +8,9 @@
 
 <?= $this->section('content'); ?>
 
-<h1>Dashboard | Management</h1>
-
 <div class="container">
+	<h1>Dashboard | Management</h1>
+
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 		<li class="nav-item" role="presentation">
 			<button class="nav-link dashboard-accordion" id="facilitiesTab" data-bs-toggle="pill" data-bs-target="#facilities" type="button" role="tab" aria-controls="facilities" aria-selected="false">Facilities</button>
@@ -27,7 +27,7 @@
 		</div>
 
 		<div class="tab-pane fade" id="requests" role="tabpanel" aria-labelledby="requestsTab">
-			<?= $this->include('dashboard/partials/requests/main'); ?>
+			<?= $this->include('dashboard/partials/requests/admin/main'); ?>
 		</div>
 	</div>
 </div>
@@ -67,5 +67,6 @@
 
 <?= $this->include('dashboard/partials/users/script'); ?>
 <?= $this->include('dashboard/partials/facilities/admin/script'); ?>
+<?= $this->include('dashboard/partials/requests/admin/script'); ?>
 
 <?= $this->endSection(); ?>

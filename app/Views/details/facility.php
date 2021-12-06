@@ -7,13 +7,17 @@
 <?php else : ?>
 	<div class="col-12 col-sm-11 col-md-8 col-lg-6 mx-auto text-center">
 		<h3><?= $facility['name']; ?></h3>
-		<img src="<?= base_url('assets/img/facilities/' . $facility['image']); ?>" alt="Foto <?= $facility['image']; ?>" width="150px" id="facilityImage" class="img-thumbnail" role="button" title="Foto <?= $facility['image']; ?>">
+		<img src="<?= base_url('assets/img/facilities/' . $facility['image']); ?>" alt="Foto <?= $facility['image']; ?>" width="400px" id="facilityImage" class="img-thumbnail" role="button" title="Foto <?= $facility['image']; ?>">
 
 		<div class="mt-3 mb-5">
 			<?= $facility['description']; ?>
 		</div>
 
-		<button class="btn btn-primary" role="button" id="requestButton">Sewa</button>
+		<?php if ($facility['customer_id'] == session('acc_id')) : ?>
+			<button class="btn btn-primary" disabled>Disewa</button>
+		<?php elseif (session('acc_management') != true && session('acc_admin') != true) : ?>
+			<button class="btn btn-primary" id="requestButton">Sewa</button>
+		<?php endif; ?>
 		<a class="btn btn-secondary" role="button" href="<?= base_url('dashboard'); ?>">Listing</a>
 	</div>
 <?php endif; ?>
@@ -59,7 +63,7 @@
 
 					<?= csrf_field(); ?>
 
-					<input type="hidden" name="user_id" value="<?= session('acc_id'); ?>">
+					<input type="hidden" name="customer_id" value="<?= session('acc_id'); ?>">
 
 					<div class="form-floating mb-3">
 						<input type="number" name="facility_id" class="form-control" placeholder=" " value="<?= $facility['id']; ?>" readonly>

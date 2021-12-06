@@ -44,13 +44,13 @@
 						</div>
 					</div>
 
-					<div class="mb-3">
-						<textarea name="description" cols="30" rows="10" placeholder="Deskripsi"></textarea>
+					<div class="form-group mb-3">
+						<textarea name="description" cols="30" rows="10" placeholder="Deskripsi"><?= (string) old('description'); ?></textarea>
 					</div>
 
 					<div class="mb-4 text-center">
-						<img src="" alt="Foto Fasilitas" width="200px" id="previewImage" class="img-thumbnail" role="button" title="Upload Gambar Fasilitas">
-						<input type="file" name="image" id="image" class="form-control <?= $validation->hasError('image') ? ' is-invalid' : ''; ?>" accept="image/*">
+						<img src="<?= base_url('assets/img/facilities/' . (old('old_image') ? (string) old('old_image') : 'default.png')); ?>" alt="Foto Fasilitas" width="200px" id="previewImage" class="img-thumbnail" role="button" title="Upload Gambar Fasilitas" onclick="$(this).next('input[name=image]').click();">
+						<input type="file" name="image" class="form-control <?= $validation->hasError('image') ? ' is-invalid' : ''; ?>" accept="image/*" style="display: none;">
 						<input type="hidden" name="old_image">
 
 						<div class="invalid-feedback">

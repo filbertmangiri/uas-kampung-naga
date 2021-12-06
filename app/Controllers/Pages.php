@@ -9,7 +9,8 @@ class Pages extends BaseController
 	public function index()
 	{
 		$data = [
-			'title' => 'Beranda'
+			'title' => 'Beranda',
+			'facilities' => (new \App\Models\FacilityModel())->getFacility()
 		];
 
 		return view('pages/home', $data);

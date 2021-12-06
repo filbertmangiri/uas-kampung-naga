@@ -23,8 +23,6 @@
 			localStorage.setItem('facilitiesAccordion', $(this).prop('id'));
 		});
 
-		<?= session('show_facility_modal'); ?>
-
 		// Non Deleted Facilities Table
 		let nonDeletedFacilitiesTable = $('#nonDeletedFacilitiesTable').DataTable({
 			ajax: '<?= base_url('facility/getallfacilities'); ?>',
@@ -51,7 +49,7 @@
 				orderable: false,
 				searchable: false,
 				autowidth: true,
-				data: 'is_rented',
+				data: null,
 				render: function(data, type, row, meta) {
 					let check = new Date();
 					let start = new Date(row.start_date);
@@ -116,8 +114,7 @@
 							check >= start && check <= end
 								? `
 									Informasi Penyewaan :<br>
-									<span style="display: inline-block; width: 140px;">Customer</span>= <a class="text-dark" href="<?= base_url('u/'); ?>/${data.customer_username}">${(data.customer_first_name + ' ' + data.customer_last_name).trim()}</a><br>
-									<span style="display: inline-block; width: 140px;">Management</span>= <a class="text-dark" href="<?= base_url('u/'); ?>/${data.management_username}">${(data.management_first_name + ' ' + data.management_last_name).trim()}</a>`
+									<span style="display: inline-block; width: 140px;">Customer</span>= <a class="text-dark" href="<?= base_url('u/'); ?>/${data.customer_username}">${(data.customer_first_name + ' ' + data.customer_last_name).trim()}</a><br>`
 								: `
 									<button type="button" class="btn btn-warning btn-sm" id="editButton" data-facility-id="${data.id}">Edit</button>
 									<button type="button" class="btn btn-danger btn-sm" id="deleteButton" data-facility-id="${data.id}">Hapus</button>`
@@ -201,14 +198,28 @@
 
 		// Actions
 
+		<?= session('show_facility_modal'); ?>
+
+		let facilityDescription;
+
+		ClassicEditor
+			.create(document.querySelector('#facilityForm textarea[name=description]'))
+			.then(function(editor) {
+				window.editor = editor;
+				facilityDescription = editor;
+			});
+
 		// Add
 		$('#facilitiesInsertButton').click(function() {
 			$('#facilityModalLabel').html('Tambah Fasilitas')
 			$('#facilityModal .modal-footer :submit').html('Tambah');
+
+			$('#facilityForm').attr('action', '<?= base_url('facility/insert'); ?>');
+
+			$('#facilityForm #previewImage').attr('src', '<?= base_url('assets/img/facilities'); ?>/default.png');
+
 			$('#facilityModal').modal('show');
 		});
-
-		ClassicEditor.create(document.querySelector('#facilityForm textarea[name=description]'));
 
 		$('#facilityForm input[name=image]').on('change', function() {
 			const [file] = $(this).prop('files');
@@ -240,18 +251,20 @@
 
 			$('#facilityForm #previewImage').attr('src', '<?= base_url('assets/img/facilities'); ?>/' + data.image);
 
+			facilityDescription.setData(data.description);
+
 			$('#facilityModal').modal('show');
 		});
 
 		$('#facilityModal').on('hidden.bs.modal', function() {
-			// $('#errorCloseButton').click();
-
 			$('#facilityForm input[name=name]').val('');
 			$('#facilityForm input[name=old_image]').val('');
-			$('#facilityForm #previewImage').attr('src', 'default.png');
+			$('#facilityForm #previewImage').attr('src', '<?= base_url('assets/img/facilities'); ?>/default.png');
 
 			$('#facilityForm input[name=image]').wrap('<form>').closest('form').get(0).reset();
 			$('#facilityForm input[name=image]').unwrap();
+
+			facilityDescription.setData('');
 
 			$('#facilityForm .invalid-feedback').html('');
 			$('#facilityForm input').removeClass('is-invalid');

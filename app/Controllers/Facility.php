@@ -30,17 +30,25 @@ class Facility extends BaseController
 	{
 		if (!$this->validate([
 			'name' => 'required|alpha_numeric_punct|min_length[5]|max_length[100]|is_unique[facilities.name]',
+			// 'description' => 'permit_empty|min_length[20]',
 			'image' => 'max_size[image,10240]|is_image[image]|mime_in[image,image/png,image/jpg,image/jpeg,image/gif]|ext_in[image,png,jpg,jpeg,gif]'
 		])) {
-			return redirect()->back()->withInput()->with('show_facility_modal', "$('#facilityModal').modal('show');");
+			return redirect()->back()->withInput()
+				->with('show_facility_modal', "$('#facilityModal').modal('show');
+					$('#facilityModalLabel').html('Tambah Fasilitas')
+					$('#facilityModal .modal-footer :submit').html('Tambah');
+					$('#facilityForm').attr('action', '" . base_url('facility/insert') . "');");
 		}
 
-		$result = $this->facilityModel->insertFacility($this->request->getpost(), $this->request->getFiles());
+		$result = $this->facilityModel->insertFacility($this->request->getPost(), $this->request->getFiles());
 
 		if (isset($result['error_msg'])) {
 			return redirect()->back()->withInput()
-				->with('facility_insert_error_msg', $result['error_msg'])
-				->with('show_facility_modal', "$('#facilityModal').modal('show');");
+				->with('facility_error_msg', $result['error_msg'])
+				->with('show_facility_modal', "$('#facilityModal').modal('show');
+					$('#facilityModalLabel').html('Tambah Fasilitas')
+					$('#facilityModal .modal-footer :submit').html('Tambah');
+					$('#facilityForm').attr('action', '" . base_url('facility/insert') . "');");
 		}
 
 		return redirect()->back()->with('show_facility_modal', "Swal.fire({
@@ -55,22 +63,30 @@ class Facility extends BaseController
 	{
 		if (!$this->validate([
 			'name' => 'required|alpha_numeric_punct|min_length[5]|max_length[100]|is_unique[facilities.name,id,' . $id . ']',
+			// 'description' => 'permit_empty|min_length[20]',
 			'image' => 'max_size[image,10240]|is_image[image]|mime_in[image,image/png,image/jpg,image/jpeg,image/gif]|ext_in[image,png,jpg,jpeg,gif]'
 		])) {
-			return redirect()->back()->withInput()->with('show_facility_modal', "$('#facilityModal').modal('show');");
+			return redirect()->back()->withInput()
+				->with('show_facility_modal', "$('#facilityModal').modal('show');
+					$('#facilityModalLabel').html('Ubah Fasilitas')
+					$('#facilityModal .modal-footer :submit').html('Simpan');
+					$('#facilityForm').attr('action', '" . base_url('facility/update/' . $id) . "');");
 		}
 
-		$result = $this->facilityModel->updateFacility($id, $this->request->getpost(), $this->request->getFiles());
+		$result = $this->facilityModel->updateFacility($id, $this->request->getPost(), $this->request->getFiles());
 
 		if (isset($result['error_msg'])) {
 			return redirect()->back()->withInput()
 				->with('facility_error_msg', $result['error_msg'])
-				->with('show_facility_modal', "$('#facilityModal').modal('show');");
+				->with('show_facility_modal', "$('#facilityModal').modal('show');
+					$('#facilityModalLabel').html('Ubah Fasilitas')
+					$('#facilityModal .modal-footer :submit').html('Simpan');
+					$('#facilityForm').attr('action', '" . base_url('facility/update/' . $id) . "');");
 		}
 
 		return redirect()->back()->with('show_facility_modal', "Swal.fire({
 			icon: 'success',
-			text: 'Berhasil menambah fasilitas',
+			text: 'Berhasil mengubah fasilitas',
 			showConfirmButton: false,
 			timer: 1500
 		});");
@@ -93,8 +109,7 @@ class Facility extends BaseController
 	public function getAllFacilities($onlyDeleted = false)
 	{
 		$facilities = $this->facilityModel->getFacility([], [], [
-			'customer',
-			'management'
+			'customer'
 		], (bool) $onlyDeleted);
 
 		echo json_encode([

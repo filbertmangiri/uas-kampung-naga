@@ -1,6 +1,6 @@
 <?php $uri = new \CodeIgniter\HTTP\URI(current_url(true)); ?>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 	<div class="container">
 		<a class="navbar-brand" href="<?= base_url(); ?>"><?= getenv('WEB_NAME'); ?></a>
 

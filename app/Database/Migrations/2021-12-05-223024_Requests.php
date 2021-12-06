@@ -14,13 +14,18 @@ class Requests extends Migration
 				'unsigned' => true,
 				'auto_increment' => true
 			],
-			'user_id' => [
+			'customer_id' => [
 				'type' => 'INT',
 				'unsigned' => true
 			],
 			'facility_id' => [
 				'type' => 'INT',
 				'unsigned' => true
+			],
+			'management_id' => [
+				'type' => 'INT',
+				'unsigned' => true,
+				'null' => true
 			],
 			'start_date' => [
 				'type' => 'DATETIME',
@@ -31,8 +36,9 @@ class Requests extends Migration
 				'null' => true
 			],
 			'status' => [
-				'type' => 'BIT',
-				'null' => true
+				'type' => 'TINYINT',
+				'constraint' => 1,
+				'default' => 0
 			],
 			'created_at' => [
 				'type' => 'DATETIME',
@@ -47,11 +53,15 @@ class Requests extends Migration
 				'null' => true
 			],
 		]);
-
+		// $this->forge->addKey(['customer_id', 'facility_id'], true);
 		$this->forge->addKey('id', true);
 
-		$this->forge->addForeignKey('user_id', 'accounts', 'id', 'CASCADE', 'CASCADE');
+		$this->forge->addUniqueKey(['customer_id', 'facility_id']);
+
+		$this->forge->addForeignKey('customer_id', 'accounts', 'id', 'CASCADE', 'CASCADE');
 		$this->forge->addForeignKey('facility_id', 'facilities', 'id', 'CASCADE', 'CASCADE');
+
+		$this->forge->addForeignKey('management_id', 'accounts', 'id', 'CASCADE', 'CASCADE');
 
 		$this->forge->createTable('requests', true);
 	}

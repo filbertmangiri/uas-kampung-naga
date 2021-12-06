@@ -49,7 +49,7 @@ $routes->post('account/settings', 'Account\Account::update', ['filter' => 'logge
 
 $routes->get('dashboard', 'Dashboard', ['filter' => 'logged-in:login']);
 
-$routes->get('u/(:alphanum)', 'User::index/$1');
+$routes->get('u/(:any)', 'User::index/$1');
 $routes->get('u', 'User', ['filter' => 'logged-in:login']);
 
 $routes->get('facility', 'Facility');

@@ -33,17 +33,7 @@ class Facility extends Migration
 				'type' => 'LONGTEXT',
 				'null' => true
 			],
-			'is_rented' => [
-				'type' => 'BIT',
-				'default' => false
-			],
 			'customer_id' => [
-				'type' => 'INT',
-				'unsigned' => true,
-				// 'default' => 0
-				'null' => true
-			],
-			'management_id' => [
 				'type' => 'INT',
 				'unsigned' => true,
 				// 'default' => 0
@@ -77,7 +67,6 @@ class Facility extends Migration
 		$this->forge->addUniqueKey('name_slug');
 
 		$this->forge->addForeignKey('customer_id', 'accounts', 'id', 'CASCADE', 'CASCADE');
-		$this->forge->addForeignKey('management_id', 'accounts', 'id', 'CASCADE', 'CASCADE');
 
 		$this->forge->createTable('facilities', true);
 	}

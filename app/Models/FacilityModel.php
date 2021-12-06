@@ -19,9 +19,7 @@ class FacilityModel extends Model
 		'name_slug',
 		'image',
 		'description',
-		'is_rented',
 		'customer_id',
-		'management_id',
 		'start_date',
 		'end_date',
 		'created_at',
@@ -78,23 +76,31 @@ class FacilityModel extends Model
 		return $return;
 	}
 
-	public function updateFacility($id, $post, $files)
+	public function updateFacility($id, $post, $files = [])
 	{
 		$return = [];
 
 		try {
-			$post['name_slug'] = url_title($post['name'], '-', true);
+			if (isset($post['name'])) {
+				$post['name_slug'] = url_title($post['name'], '-', true);
+			}
 
-			$fileError = $files['image']->getError();
+			if ($files) {
+				$fileError = $files['image']->getError();
 
-			if ($fileError == UPLOAD_ERR_OK) {
-				$post['image'] = 'facility-' . $return['id'] . '.' . $files['image']->guessExtension();
+				if ($fileError == UPLOAD_ERR_OK) {
+					$post['image'] = 'facility-' . $id . '.' . $files['image']->guessExtension();
 
-				$files['image']->move('assets/img/facilities', $post['image'], true);
-			} elseif ($fileError == UPLOAD_ERR_NO_FILE) {
-				$post['image'] = $post['old_image'];
-			} else {
-				throw new \Exception($files['image']->getErrorString() . ' (' . $files['image']->getError() . ')');
+					if (file_exists('assets/img/facilities/' . $post['old_image'])) {
+						unlink('assets/img/facilities/' . $post['old_image']);
+					}
+
+					$files['image']->move('assets/img/facilities', $post['image'], true);
+				} elseif ($fileError == UPLOAD_ERR_NO_FILE) {
+					$post['image'] = $post['old_image'];
+				} else {
+					throw new \Exception($files['image']->getErrorString() . ' (' . $files['image']->getError() . ')');
+				}
 			}
 
 			$this->update($id, $post);

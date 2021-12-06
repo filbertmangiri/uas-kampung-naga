@@ -10,5 +10,6 @@ class DataSeeder extends Seeder
 	{
 		$this->call('AccountSeeder');
 		$this->call('FacilitySeeder');
+		$this->call('RequestSeeder');
 	}
 }
