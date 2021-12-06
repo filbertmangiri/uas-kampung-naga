@@ -44,18 +44,16 @@ $routes->post('login', 'Account\Login::submit', ['filter' => 'logged-out']);
 
 $routes->get('logout', 'Account\Logout', ['filter' => 'logged-in']);
 
+$routes->get('account/settings', 'Account\Account::settings', ['filter' => 'logged-in:login']);
+$routes->post('account/settings', 'Account\Account::update', ['filter' => 'logged-in:login']);
+
 $routes->get('dashboard', 'Dashboard', ['filter' => 'logged-in:login']);
 
-$routes->get('user/update', function () {
-	throw new \Exception('', 404);
-});
-$routes->post('user/update', 'User::update', ['filter' => 'management']);
+$routes->get('u/(:alphanum)', 'User::index/$1');
+$routes->get('u', 'User', ['filter' => 'logged-in:login']);
 
-$routes->get('u', 'Account\Account', ['filter' => 'logged-in:login']);
-$routes->get('u/settings', 'Account\Account::settings', ['filter' => 'logged-in:login']);
-$routes->post('u/settings', 'Account\Account::update', ['filter' => 'logged-in:login']);
-$routes->post('u/isexist', 'Account\Account::isExist');
-$routes->get('u/(:alphanum)', 'Account\Account::index/$1');
+$routes->get('facility', 'Facility');
+$routes->get('f/(:any)', 'Facility::index/$1');
 
 /*
  * --------------------------------------------------------------------

@@ -1,10 +1,30 @@
+<!-- jQuery Validation -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js" integrity="sha256-TAzGN4WNZQPLqSYvi+dXQMKehTYFoVOnveRqbi42frA=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js" integrity="sha256-+NPi2ReKyI6yhNClJ78JSzbMmihq7Kjml84LwR631hM=" crossorigin="anonymous"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
-		<?= session('show_editing_modal'); ?>
+		let usersAccordion = localStorage.getItem('usersAccordion');
+
+		if (usersAccordion) {
+			let targetFrom = $('.users-accordion[aria-selected=true]').attr('data-bs-target');
+			$('.users-accordion[aria-selected=true]').removeClass('active').attr('aria-selected', 'false');
+			let targetTo = $('#' + usersAccordion).attr('data-bs-target');
+			$('#' + usersAccordion).addClass('active').attr('aria-selected', 'true');
+
+			$(targetFrom).removeClass('active show');
+			$(targetTo).addClass('active show');
+		}
+
+		$('.users-accordion').click(function() {
+			localStorage.setItem('usersAccordion', $(this).prop('id'));
+		});
+
+		<?= session('show_user_editing_modal'); ?>
 
 		// Non Deleted Users Table
-		let nonDeletedTable = $('#nonDeletedTable').DataTable({
-			ajax: '<?= base_url('account/account/getallaccounts'); ?>',
+		let nonDeletedUsersTable = $('#nonDeletedUsersTable').DataTable({
+			ajax: '<?= base_url('user/getallaccounts'); ?>',
 			deferRender: true,
 			responsive: {
 				details: false
@@ -26,9 +46,9 @@
 				data: 'username'
 			}, {
 				autowidth: true,
-				data: 'first_name',
+				data: null,
 				render: function(data, type, row, meta) {
-					return (data + ' ' + row.last_name).trim();
+					return (row.first_name + ' ' + row.last_name).trim();
 				}
 			}, {
 				orderable: false,
@@ -48,8 +68,9 @@
 						return '';
 					}
 
-					return '<button type="button" class="btn btn-warning btn-sm" id="editButton" data-acc-id="' + row.id + '">Edit</button> ' +
-						'<button type="button" class="btn btn-danger btn-sm" id="deleteButton" data-acc-id="' + row.id + '">Hapus</button>';
+					return `
+						<button type="button" class="btn btn-warning btn-sm" id="editButton" data-acc-id="${row.id}">Edit</button>
+						<button type="button" class="btn btn-danger btn-sm" id="deleteButton" data-acc-id="${row.id}">Hapus</button>`;
 				}
 			}],
 			order: [
@@ -57,9 +78,9 @@
 			]
 		});
 
-		$('#nonDeletedTable tbody').on('click', 'td.dt-control', function() {
+		$('#nonDeletedUsersTable tbody').on('click', 'td.dt-control', function() {
 			let tr = $(this).closest('tr');
-			let row = nonDeletedTable.row(tr);
+			let row = nonDeletedUsersTable.row(tr);
 
 			if (row.child.isShown()) {
 				row.child.hide();
@@ -71,7 +92,8 @@
 					let str = '';
 
 					str +=
-						'<img src="<?= base_url('assets/img/profile-pictures'); ?>/' + data.profile_picture + '" alt="Foto profil ' + data.profile_picture + '" width="150px" id="profilePicture" class="img-thumbnail" role="button" title="Foto profil ' + data.profile_picture + '" style="border-radius: 50%;">' +
+						'<div class="text-center">' +
+						'<img src="<?= base_url('assets/img/users'); ?>/' + data.profile_picture + '" alt="Foto profil ' + data.username + '" width="150px" id="profilePicture" class="img-thumbnail" role="button" title="Foto profil ' + data.username + '" style="border-radius: 50%;">' +
 						'<br><br>';
 
 					if (data.username == '<?= getenv('ADMIN_USERNAME'); ?>')
@@ -89,9 +111,11 @@
 						'<span style="display: inline-block; width: 140px;">Nama</span> = ' + (data.first_name + ' ' + data.last_name).trim() + '<br>' +
 						'<span style="display: inline-block; width: 140px;">Tanggal Lahir</span> = ' + data.birth_date + '<br>' +
 						'<span style="display: inline-block; width: 140px;">Jenis Kelamin</span> = ' + (data.gender == 0 ? 'Laki-laki' : 'Perempuan') + '<br>' +
-						'<span style="display: inline-block; width: 140px;">Terakhir di update</span> = ' + data.updated_at + '<br>' +
+						'<span style="display: inline-block; width: 140px;">Tanggal Daftar</span> = ' + data.created_at + '<br>' +
+						'<span style="display: inline-block; width: 140px;">Terakhir Diubah</span> = ' + data.updated_at + '<br>' +
 						'<button type="button" class="btn btn-warning btn-sm" id="editButton" data-acc-id="' + data.id + '" data-acc-child="true">Edit</button> ' +
 						'<button type="button" class="btn btn-danger btn-sm" id="deleteButton" data-acc-id="' + data.id + '">Hapus</button>'
+					'</div>'
 					'</div>';
 
 					return str;
@@ -101,14 +125,15 @@
 			}
 		});
 
-		$('#nonDeletedTable > tbody').on('click', '#profilePicture', function() {
+		$('#nonDeletedUsersTable > tbody').on('click', '#profilePicture', function() {
 			$('#profilePictureZoomedImage').prop('src', $(this).prop('src'));
+			$('#profilePictureZoomedImage').prop('width', $(this).prop('width'));
 			$('#profilePictureModal').modal('show');
 		});
 
 		// Deleted Users Table
-		let DeletedTable = $('#deletedTable').DataTable({
-			ajax: '<?= base_url('account/account/getallaccounts/1'); ?>',
+		let deletedUsersTable = $('#deletedUsersTable').DataTable({
+			ajax: '<?= base_url('user/getallaccounts/1'); ?>',
 			deferRender: true,
 			responsive: {
 				details: false
@@ -130,9 +155,9 @@
 				data: 'username'
 			}, {
 				autowidth: true,
-				data: 'first_name',
+				data: null,
 				render: function(data, type, row, meta) {
-					return (data + ' ' + row.last_name).trim();
+					return (row.first_name + ' ' + row.last_name).trim();
 				}
 			}, {
 				orderable: false,
@@ -152,8 +177,9 @@
 						return '';
 					}
 
-					return '<button type="button" class="btn btn-primary btn-sm" id="restoreButton" data-acc-id="' + row.id + '">Pulih</button> ' +
-						'<button type="button" class="btn btn-danger btn-sm" id="deleteButton" data-acc-id="' + row.id + '" data-acc-delete-purge>Hapus</button>';
+					return `
+						<button type="button" class="btn btn-primary btn-sm" id="restoreButton" data-acc-id="${row.id}">Pulih</button>
+						<button type="button" class="btn btn-danger btn-sm" id="deleteButton" data-acc-id="${row.id}" data-acc-delete-purge>Hapus</button>`;
 				}
 			}],
 			order: [
@@ -161,9 +187,9 @@
 			]
 		});
 
-		$('#deletedTable tbody').on('click', 'td.dt-control', function() {
+		$('#deletedUsersTable tbody').on('click', 'td.dt-control', function() {
 			let tr = $(this).closest('tr');
-			let row = DeletedTable.row(tr);
+			let row = deletedUsersTable.row(tr);
 
 			if (row.child.isShown()) {
 				row.child.hide();
@@ -175,7 +201,7 @@
 					let str = '';
 
 					str +=
-						'<img src="<?= base_url('assets/img/profile-pictures'); ?>/' + data.profile_picture + '" alt="Foto profil ' + data.profile_picture + '" width="150px" id="profilePicture" class="img-thumbnail" role="button" title="Foto profil ' + data.profile_picture + '" style="border-radius: 50%;">' +
+						'<img src="<?= base_url('assets/img/users'); ?>/' + data.profile_picture + '" alt="Foto profil ' + data.username + '" width="150px" id="profilePicture" class="img-thumbnail" role="button" title="Foto profil ' + data.username + '" style="border-radius: 50%;">' +
 						'<br><br>';
 
 					if (data.username == '<?= getenv('ADMIN_USERNAME'); ?>')
@@ -193,6 +219,7 @@
 						'<span style="display: inline-block; width: 140px;">Nama</span> = ' + (data.first_name + ' ' + data.last_name).trim() + '<br>' +
 						'<span style="display: inline-block; width: 140px;">Tanggal Lahir</span> = ' + data.birth_date + '<br>' +
 						'<span style="display: inline-block; width: 140px;">Jenis Kelamin</span> = ' + (data.gender == 0 ? 'Laki-laki' : 'Perempuan') + '<br>' +
+						'<span style="display: inline-block; width: 140px;">Tanggal Daftar</span> = ' + data.created_at + '<br>' +
 						'<span style="display: inline-block; width: 140px;">Tanggal Terhapus</span> = ' + data.deleted_at + '<br>' +
 						'<button type="button" class="btn btn-primary btn-sm" id="restoreButton" data-acc-id="' + data.id + '">Pulih</button> ' +
 						'<button type="button" class="btn btn-danger btn-sm" id="deleteButton" data-acc-id="' + data.id + '" data-acc-delete-purge>Hapus</button>'
@@ -205,7 +232,7 @@
 			}
 		});
 
-		$('#deletedTable > tbody').on('click', '#profilePicture', function() {
+		$('#deletedUsersTable > tbody').on('click', '#profilePicture', function() {
 			$('#profilePictureZoomedImage').prop('src', $(this).prop('src'));
 			$('#profilePictureModal').modal('show');
 		});
@@ -213,7 +240,7 @@
 		// Actions
 
 		// Edit
-		$('#nonDeletedTable').on('click', '#editButton', function() {
+		$('#nonDeletedUsersTable').on('click', '#editButton', function() {
 			let id = $(this).attr('data-acc-id');
 			let row;
 
@@ -223,7 +250,7 @@
 				row = $(this).closest('tr');
 			}
 
-			let data = nonDeletedTable.row(row).data();
+			let data = nonDeletedUsersTable.row(row).data();
 
 			$('#accSettingsForm input[name=old_profile_picture]').val(data.profile_picture);
 			$('#accSettingsForm input[name=email]').val(data.email);
@@ -237,6 +264,12 @@
 			$('#accSettingsForm').attr('action', '<?= base_url('user/update'); ?>/' + id);
 
 			$('#accountEditModal').modal('show');
+
+			$('input[name=email]').blur(() => validation('email', 'The email field must contain a unique value.', data.email));
+			$('#accSettingsForm').submit(() => validation('email', 'The email field must contain a unique value.', data.email));
+
+			$('input[name=username]').blur(() => validation('username', 'The username field must contain a unique value.', data.username));
+			$('#accSettingsForm').submit(() => validation('username', 'The username field must contain a unique value.', data.username));
 		});
 
 		$('#accountEditModal').on('hidden.bs.modal', function() {
@@ -247,12 +280,12 @@
 		});
 
 		// Delete
-		$('#nonDeletedTable,#deletedTable').on('click', '#deleteButton', function() {
+		$('#nonDeletedUsersTable,#deletedUsersTable').on('click', '#deleteButton', function() {
 			let id = $(this).attr('data-acc-id');
 			let purge = $(this).attr('data-acc-delete-purge') != undefined;
 
 			Swal.fire({
-				title: 'Hapus Akun',
+				title: 'Hapus ' + (purge ? 'Permanen ' : '') + 'Akun',
 				text: 'Anda yakin ingin menghapus ' + (purge ? 'permanen ' : '') + 'akun ini?',
 				icon: 'warning',
 				showCancelButton: true,
@@ -293,7 +326,7 @@
 		});
 
 		// Restore
-		$('#deletedTable').on('click', '#restoreButton', function() {
+		$('#deletedUsersTable').on('click', '#restoreButton', function() {
 			let id = $(this).attr('data-acc-id');
 
 			Swal.fire({
@@ -334,6 +367,102 @@
 					});
 				}
 			});
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	function validation(key, error, old) {
+		let element = $('input[name=' + key + ']');
+
+		if (element.val().toLocaleLowerCase() != old.toLocaleLowerCase()) {
+			$.ajax({
+				data: {
+					key: key,
+					value: element.val()
+				},
+				type: 'post',
+				url: '<?= base_url('user/isexist') ?>',
+				success: function(data) {
+					if (data) {
+						element.addClass('is-invalid');
+						element.next().next('.invalid-feedback').html(error);
+					}
+				}
+			});
+		}
+	}
+
+	$(document).ready(function() {
+		$.validator.addMethod('lettersOnly', function(value, element) {
+			return this.optional(element) || /^[A-Za-z áãâäàéêëèíîïìóõôöòúûüùçñ]+$/i.test(value);
+		});
+
+		$.validator.addMethod('emailEx', function(value, element) {
+			return /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value);
+		});
+
+		$.validator.addMethod('noSpaceSymbol', function(value, element) {
+			return this.optional(element) || /^[a-zA-Z0-9_]+$/i.test(value);
+		});
+
+		$.validator.addMethod('lessThanToday', function(value, element) {
+			return new Date(value) < new Date();
+		});
+
+		$.validator.addMethod('fileTypeImage', function(value, element) {
+			return this.optional(element) || (element.files[0].size <= param * 1048576);
+		});
+
+		$('#accSettingsForm').validate({
+			ignore: 'input[name=profile_picture]',
+
+			rules: {
+				first_name: {
+					required: true,
+					lettersOnly: true,
+					minlength: 2
+				},
+				last_name: {
+					lettersOnly: true,
+				},
+				email: {
+					required: true,
+					emailEx: true
+				},
+				username: {
+					required: true,
+					noSpaceSymbol: true,
+					minlength: 5,
+					maxlength: 50
+				},
+				birth_date: {
+					required: true,
+					dateISO: true,
+					lessThanToday: true
+				},
+				gender: {
+					required: true,
+				}
+			},
+
+			errorPlacement: function(error, element) {
+				element.next().next('.invalid-feedback').html(error.html());
+			},
+
+			highlight: function(element, errorClass, validClass) {
+				if ($(element).prop('type') != 'radio') {
+					$(element).addClass('is-invalid');
+				}
+			},
+
+			unhighlight: function(element, errorClass, validClass) {
+				$(element).removeClass('is-invalid');
+			},
+
+			submitHandler: function(form) {
+				form.submit();
+			}
 		});
 	});
 </script>

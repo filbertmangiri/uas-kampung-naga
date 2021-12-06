@@ -74,11 +74,11 @@ class Account extends Migration
 		$this->forge->addUniqueKey('email');
 		$this->forge->addUniqueKey('username');
 
-		$this->forge->createTable('accounts');
+		$this->forge->createTable('accounts', true);
 	}
 
 	public function down()
 	{
-		$this->forge->dropTable('accounts');
+		$this->forge->dropTable('accounts', true);
 	}
 }

@@ -9,5 +9,6 @@ class DataSeeder extends Seeder
 	public function run()
 	{
 		$this->call('AccountSeeder');
+		$this->call('FacilitySeeder');
 	}
 }

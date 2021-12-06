@@ -17,10 +17,16 @@
 CI_ENVIRONMENT = development
 
 #--------------------------------------------------------------------
+# WEB INFORMATIONS
+#--------------------------------------------------------------------
+
+WEB_NAME = 'Kampung Naga'
+
+#--------------------------------------------------------------------
 # APP
 #--------------------------------------------------------------------
 
-app.baseURL = 'http://localhost/uas-kampung-naga-main/public/'
+app.baseURL = 'http://localhost:8080/'
 # app.forceGlobalSecureRequests = false
 
 # app.sessionDriver = 'CodeIgniter\Session\Handlers\FileHandler'
@@ -43,7 +49,7 @@ ADMIN_PASSWORD = 'admin'
 ADMIN_FIRST_NAME = 'Admin'
 ADMIN_LAST_NAME =
 ADMIN_BIRTH_DATE = '2003-03-09'
-ADMIN_GENDER = false # Male
+ADMIN_GENDER = 0 # Male
 ADMIN_PROFILE_PICTURE = 'default.png'
 
 #--------------------------------------------------------------------

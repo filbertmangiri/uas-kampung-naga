@@ -29,6 +29,7 @@ class Dashboard extends BaseController
 
 		if (session('acc_management') === true) {
 			$data['title'] .= ' | Management';
+			$data['validation'] = \Config\Services::validation();
 
 			return view('dashboard/roles/management/main', $data);
 		}

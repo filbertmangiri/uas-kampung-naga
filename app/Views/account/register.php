@@ -48,7 +48,7 @@
 		<?= csrf_field(); ?>
 
 		<div class="mb-4 text-center">
-			<img src="<?= base_url('assets/img/profile-pictures/default-male.png'); ?>" alt="Foto Profil" width="150px" id="currentProfile" class="img-thumbnail" role="button" title="Upload foto profil" style="border-radius: 50%;">
+			<img src="<?= base_url('assets/img/users/default-male.png'); ?>" alt="Foto Profil" width="150px" id="currentProfile" class="img-thumbnail" role="button" title="Upload foto profil" style="border-radius: 50%;">
 			<input type="file" name="profile_picture" id="profilePicture" class="form-control <?= $validation->hasError('profile_picture') ? ' is-invalid' : ''; ?>" style="display: none;" accept="image/*">
 			<input type="hidden" name="profile_picture_canvas">
 
@@ -286,7 +286,7 @@
 					value: element.val()
 				},
 				type: 'post',
-				url: '<?= base_url('u/isexist') ?>',
+				url: '<?= base_url('user/isexist') ?>',
 				success: function(data) {
 					if (data) {
 						element.addClass('is-invalid');
@@ -346,7 +346,7 @@
 				},
 				password: {
 					required: true,
-					minlength: 6
+					minlength: 5
 				},
 				password_confirm: {
 					required: true,

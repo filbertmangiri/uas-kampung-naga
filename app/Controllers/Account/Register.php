@@ -29,7 +29,7 @@ class Register extends BaseController
 		if (!$this->validate([
 			'email' => 'required|valid_email|is_unique[accounts.email]',
 			'username' => 'required|alpha_numeric|min_length[5]|max_length[50]|is_unique[accounts.username]',
-			'password' => 'required|min_length[6]',
+			'password' => 'required|min_length[5]',
 			'password_confirm' => 'required|matches[password]',
 			'first_name' => 'required|alpha_space|min_length[2]',
 			'last_name' => 'permit_empty|alpha_space',
@@ -38,13 +38,13 @@ class Register extends BaseController
 			'profile_picture' => 'max_size[profile_picture,10240]|is_image[profile_picture]',
 			// |mime_in[profile_picture,image/jpg,image/jpeg,image/png,image/gif]|ext_in[profile_picture,jpg,jpeg,png,gif]
 		])) {
-			return redirect()->to(base_url('register'))->withInput();
+			return redirect()->back()->withInput();
 		}
 
 		$account = $this->accountModel->insertAccount($this->request->getPost());
 
 		if (!isset($account['id']) || $account['id'] <= 0) {
-			return redirect()->to(base_url('register'))->withInput()->with('register_error_msg', $account['error_msg']);
+			return redirect()->back()->withInput()->with('register_error_msg', $account['error_msg']);
 		}
 
 		$session = session();

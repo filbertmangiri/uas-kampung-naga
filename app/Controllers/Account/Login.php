@@ -29,13 +29,13 @@ class Login extends BaseController
 			'email_username' => 'required',
 			'password' => 'required'
 		])) {
-			return redirect()->to(base_url('login'))->withInput()->with('login_error_msg', 'Username atau password salah');
+			return redirect()->back()->withInput()->with('login_error_msg', 'Username atau password salah');
 		}
 
 		$account = $this->accountModel->getAccount($this->request->getPost());
 
 		if (!$account) {
-			return redirect()->to(base_url('login'))->withInput()->with('login_error_msg', 'Username atau password salah');
+			return redirect()->back()->withInput()->with('login_error_msg', 'Username atau password salah');
 		} else {
 			$session = session();
 
@@ -57,7 +57,7 @@ class Login extends BaseController
 
 			$session->set('acc_logged_in', true);
 
-			if (!file_exists('assets/img/profile-pictures/' . session('acc_profile_picture'))) {
+			if (!file_exists('assets/img/users/' . session('acc_profile_picture'))) {
 				$session->set('acc_profile_picture', 'default-' . (!session('acc_gender') ? 'male' : 'female') . '.png');
 				$this->accountModel->updateAccount(session('acc_id'), ['profile_picture' => session('acc_profile_picture')]);
 			}

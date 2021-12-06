@@ -25,9 +25,7 @@
 <body>
 	<?= $this->include('partials/navbar/main'); ?>
 
-	<div class="container mt-5">
-		<?= $this->renderSection('content'); ?>
-	</div>
+	<?= $this->renderSection('content'); ?>
 
 	<?= $this->renderSection('modals'); ?>
 
